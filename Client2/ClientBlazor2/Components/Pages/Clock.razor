@@ -1,0 +1,154 @@
+@page "/clock"
+@rendermode InteractiveServer
+@attribute [StreamRendering(true)]
+@using System.Timers
+@using System.Net.Sockets;  
+@using System.Net;  
+@using System.Runtime.InteropServices;
+@implements IDisposable
+
+<h1>Clock: @currentDateTime </h1>
+<h1>Package Number: @packetNumber </h1>
+<h1>Package Type: @packetType </h1>
+
+@code {
+
+    // @rendermode InteractiveServer lets the UI update
+    // @attribute [StreamRendering(true)] allows the rest of the page to update before patching in delayed components
+    
+    private string currentDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+    private ushort packetNumber;
+    private ushort packetType;
+    private Timer timer;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //one second interval
+        timer = new Timer(1000);
+        timer.AutoReset = true;
+        timer.Elapsed += OnTimerTick;
+        timer.Enabled = true;
+
+        
+        await UpdateTime();
+
+    }
+
+    private async Task UpdateTime()
+    {
+        currentDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void OnTimerTick(Object sender, ElapsedEventArgs e)
+    { 
+        
+        byte[] bytes = readMessage();
+
+        Packet packet = new Packet();
+        socketByteArrayToPacketStructure(bytes, ref packet); // Deserialize
+
+        Console.WriteLine(packet.ToString());
+        packetNumber = packet.PacketNumber;
+        packetType = packet.PacketType;
+
+        InvokeAsync(UpdateTime);
+    }
+
+    public void Dispose()
+    {
+        timer.Stop();
+        timer.Dispose();
+    }
+
+    private static byte[] readMessage() {  
+        
+        int packetSize = Marshal.SizeOf(typeof(Packet));
+
+        try // Try connecting and read the message bytes  
+        {  
+            System.Net.Sockets.TcpClient client = new System.Net.Sockets.TcpClient("127.0.0.1", 3456); // Create a new connection  
+            NetworkStream stream = client.GetStream();  
+
+            Console.WriteLine("================================");  
+            Console.WriteLine("=   Connected to the server    =");  
+            Console.WriteLine("================================");  
+            Console.WriteLine("Waiting for response...");  
+    
+            byte[] messageBytes = new byte[packetSize]; // Clear the message   
+    
+            // Receive the stream of bytes  
+            stream.Read(messageBytes, 0, messageBytes.Length);  
+    
+            // Clean up  
+            stream.Dispose();  
+            client.Close();
+
+            return messageBytes; // Return response
+        }  
+        catch (Exception e) // Catch exceptions  
+        {  
+            Console.WriteLine(e.Message);
+            return null;
+        }  
+    
+        
+    }
+
+    public static void socketByteArrayToPacketStructure(byte[] bytearray, ref Packet obj)// for Packet only
+    {
+        int Length = Marshal.SizeOf(obj);
+        IntPtr ptr = Marshal.AllocHGlobal(Length);
+        Marshal.Copy(bytearray, 0, ptr, Length);
+        obj = (Packet)Marshal.PtrToStructure(ptr, typeof(Packet));
+        Marshal.FreeHGlobal(ptr);
+    }
+
+    public static void socketPacketStructureToByteArray(byte[] bytearray, ref Packet obj)
+    {
+        int Length = Marshal.SizeOf(obj);
+        IntPtr ptr = Marshal.AllocHGlobal(Length);
+        Marshal.StructureToPtr(obj, ptr, false);
+        Marshal.Copy(ptr, bytearray, 0, Length);
+        Marshal.FreeHGlobal(ptr);
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct Packet
+    {
+        public ushort InstrumentID;     
+        public ushort PacketType;       
+        public ushort PacketTrigger;    
+        public ushort PacketNumber;    
+        public ushort InstrumentMode;  
+        public ushort MMIMode;          
+        public ushort timer0;         
+        public ushort timer1;          
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValArray, SizeConst = 8)]
+        public ushort[] wOption;
+
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValArray, SizeConst = 16)]
+        public ushort[] wOption1;
+
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValArray, SizeConst = 8)]
+        public ushort[] wData0;
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValArray, SizeConst = 8)]
+        public ushort[] wData1;
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValArray, SizeConst = 8)]
+        public ushort[] wData2;
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValArray, SizeConst = 8)]
+        public ushort[] wData3;
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValArray, SizeConst = 8)]
+        public ushort[] wData4;
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValArray, SizeConst = 8)]
+        public ushort[] wData5;
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValArray, SizeConst = 8)]
+        public ushort[] wData6;
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValArray, SizeConst = 8)]
+        public ushort[] wData7;
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValArray, SizeConst = 448)]
+        public ushort[] wData8;
+
+    } //size =    32 + 1024 = 1056
+
+}

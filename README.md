@@ -4,8 +4,8 @@
 ## Uses Blazor Web App's WebAssembly for displaying graphics
 ```mermaid
 graph TD;
-    Initial Source-->Server1
-    Initial Source-->Client1;
+    InitialSource-->Server1
+    InitialSource-->Client1;
     Server1-->Client1;
     Client1-->Client2;
 ```

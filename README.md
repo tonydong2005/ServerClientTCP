@@ -11,8 +11,8 @@ System.Runtime.InteropServices.Marshal for struct and byte array conversion
 
 ```mermaid
 graph LR;
-    id[InitialSource]-->Server1;
-    id[InitialSource]-->Client1;
+    id[Initial Source]-->id[Server1\ntest];
+    id[Initial Source]-->Client1;
     Server1-->|127.0.0.1:1234|Client1;
     Client1-->|127.0.0.1:3456|Client2;
 ```

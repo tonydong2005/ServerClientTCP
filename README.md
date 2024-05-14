@@ -6,9 +6,9 @@ Overview:
 * Client1 sends requests to 127.0.0.1:1234 at a regular interval, currently clocked at 1 per second.
 * Server1 fills in packet information upon receiving a request and returns packet to client.
 * Client1 hosts an intermediate server at 127.0.0.1:3456.
-* Client2 sends requests to 127.0.0.1:3456 at a regular interval, currently clokced at 1 per second.
+* Client2 sends requests to 127.0.0.1:3456 at a regular interval, currently clocked at 1 per second.
 * Client1 adds on to packet information upon receiving a request and returns packet to client.
-* Client2 displays packet information through Web App graphics.
+* Client2 displays packet information through Blazor Web App graphics.
 
 Tools/Libraries:
 * .NET Console App for hosting and connecting

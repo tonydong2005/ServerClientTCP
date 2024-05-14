@@ -11,6 +11,7 @@ Overview:
 * Client2 displays packet information through Blazor Web App graphics.
 
 Tools/Libraries:
+* Visual Studio Code C# and C#Dev Kit extension
 * .NET Console App for hosting and connecting
 * Blazor Web App's WebAssembly for displaying graphics
 * System.Net for network endpoint and stream creation

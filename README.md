@@ -11,7 +11,9 @@ Overview:
 * Client2 displays packet information through Blazor Web App graphics.
 
 Tools/Libraries:
+* .NET framework version 8.0.104
 * .NET Console App for hosting and connecting
+* ASP.NET Core version 8.0
 * Blazor Web App's WebAssembly for displaying graphics
 * System.Net for network endpoint and stream creation
 * System.Net.Sockets for network socket creation

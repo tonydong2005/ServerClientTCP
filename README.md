@@ -22,7 +22,7 @@ Tools/Libraries:
 Notes:
 * .NET framework version 8.0.104
 * ASP.NET Core version 8.0
-* Run the following command in .NET project terminal to increase limit on number of inotify instances:
+* Run the following command in .NET project terminal to increase limit on number of inotify instances:\
 echo fs.inotify.max_user_instances=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
 Sources/Links:

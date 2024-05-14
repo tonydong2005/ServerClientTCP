@@ -17,7 +17,7 @@ Tools/Libraries:
 * System.Net for network endpoint and stream creation
 * System.Net.Sockets for network socket creation
 * System.Timers.Timer for clocking packet send frequency
-* System.Runtime.InteropServices.Marshal for struct and byte array conversion
+* System.Runtime.InteropServices.Marshal for TCP/IP packet struct and byte array conversion
 
 Notes:
 * .NET framework version 8.0.104

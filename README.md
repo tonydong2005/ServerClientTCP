@@ -11,14 +11,25 @@ Overview:
 * Client2 displays packet information through Blazor Web App graphics.
 
 Tools/Libraries:
-* .NET framework version 8.0.104
 * .NET Console App for hosting and connecting
-* ASP.NET Core version 8.0
 * Blazor Web App's WebAssembly for displaying graphics
 * System.Net for network endpoint and stream creation
 * System.Net.Sockets for network socket creation
 * System.Timers.Timer for clocking packet send frequency
 * System.Runtime.InteropServices.Marshal for struct and byte array conversion
+
+Notes:
+* .NET framework version 8.0.104
+* ASP.NET Core version 8.0
+* Run the following command in .NET project terminal to increase limit on number of inotify instances:
+echo fs.inotify.max_user_instances=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
+Sources/Links:
+* [Server/Client for Linux in C, C#](https://github.com/sam2home/SamTestPlatform_ARM).
+* [Server/Client Using TCP in .NET](https://www.c-sharpcorner.com/UploadFile/201fc1/creating-a-serversharp47client-application-using-only-tcp-prot/).
+* [.NET Documentation](https://learn.microsoft.com/en-us/dotnet/fundamentals/).
+* [ASP.NET Core Blazor Documentation](https://learn.microsoft.com/en-us/aspnet/core/blazor/?view=aspnetcore-8.0).
+
 
 ```mermaid
 graph LR;
